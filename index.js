@@ -33,8 +33,10 @@ loginForm.addEventListener("submit", submitEvent)
 /* 
   Всплытие событий
   */
+
+// событие источника
 loginForm.children[0].addEventListener("dblclick", function(event) {
-    // свойство события - всплывает ли оно
+    // узнать всплывает ли событие
     console.log(event.bubbles);
 
     alert("input")
@@ -44,12 +46,15 @@ loginForm.children[0].addEventListener("dblclick", function(event) {
     // event.stopPropagation();
 })
 
-loginForm.addEventListener("dblclick", function() {
+// при всплытии оповещение об этом событии 
+// получат также элементы выше по дереву (currentTraget)
+// после того как завершится колбэк у источника (target)
+loginForm.addEventListener("dblclick", function(event) {
     // target - кто вызвал событие
-    // console.log(event.target) // input
+    console.log(event.target) // input
 
     // currentTarget - какой элемент слушает событие
-    // console.log(event.currentTarget) // form
+    console.log(event.currentTarget) // form
 
     alert("form")
 })
@@ -57,3 +62,35 @@ loginForm.addEventListener("dblclick", function() {
 document.body.addEventListener("dblclick", function () {
     alert("body")
 })
+
+
+
+
+
+/* 
+  data-* атрибуты
+*/
+function dataAttributes (event) {
+    event.preventDefault()
+
+    /* цикл по всем инпут полям */
+    for(let i = 0; i < event.target.children.length; i++) {
+
+        // получение одного input
+        const input = event.target.children[i]
+
+        // проверка значение обязательное ли поле
+        if (input.getAttribute("data-required") === "true") {
+            // если поле обязательно
+
+            // и поле пустое
+            if(input.value === "") {
+                // то вывести сообщение
+                alert(`Required ${input.name} Field`)
+            }
+        }
+    }
+}
+// второй обработчик на событие submit
+// запустится вторым
+loginForm.addEventListener("submit", dataAttributes)
